@@ -1,0 +1,12 @@
+;; -*- mode: scheme; -*-
+
+(task hello ()
+      (println "Hello, World"))
+
+(task count ()
+      (map (lambda (it)
+             (print it " "))
+           (iota 4)))
+
+(task intro (#:depends-on hello)
+      (println "I'm Cradle"))

@@ -1,0 +1,37 @@
+#!/usr/bin/guile \
+-L ../lib/ -s
+!#
+;; -*- mode: scheme; -*-
+(use-modules (ice-9 getopt-long))
+
+(define cradle-version "0.1")
+
+(define (show-version program-name)
+  (format #t "~a ~a~%" program-name cradle-version))
+
+(define (show-help program-name option-spec)
+  (format #t "Usage: ~a [<option> ...] [<task> ...]~%" program-name))
+
+(define (exec-command options)
+  (display options)
+  (newline))
+
+(define (main args)
+  (let* ((program-name      (basename (car args)))
+         (option-spec       '((version (single-char #\v) (value #f))
+                              (help    (single-char #\h) (value #f))
+                              (quiet   (single-char #\q) (value #f))))
+         (options           (getopt-long args option-spec))
+         (help-wanted       (option-ref options 'help     #f))
+         (version-wanted    (option-ref options 'version #f)))
+    (if (or version-wanted
+            help-wanted)
+        (begin
+          (if version-wanted
+              (show-version program-name))
+          (if help-wanted
+              (show-help program-name option-spec)))
+        (begin
+          (exec-command options)))))
+
+(main (command-line))
